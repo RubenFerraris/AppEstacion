@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>app-estacion - Panel</title>
+
+	<link rel="stylesheet" type="text/css" href="./views/static/css/styles.css">
+	
+</head>
+<body>
+	<div id="wrapper">
+		<header class="header__panel">
+			<h2> Estaciónes </h2>
+			<a href="logout" class="boton">Cerrar Sesión</a>
+		</header>
+		<main class="main__admin">
+			<div class="contenido">
+				<div class="flexCenter content">
+					<div class="boton {{LOGUED}}">
+						<a href="map">ver mapa</a>
+					</div>
+					<table>
+						<tr>
+							<td>
+								Usuarios
+							</td>
+							<td>
+								Clientes
+							</td>
+						</tr>
+						<tr>
+							<td id="usuarios">
+								13
+							</td>
+							<td id="tracker">
+								123
+							</td>
+						</tr>
+					</table>
+				</div>
+
+			</div>
+			
+		</main>
+	 </div>
+	 <script type="text/javascript">
+	 	getStations().then( data => {
+	 		usuarios.innerText = data.list.total_users
+	 		tracker.innerText = data.list.total_tracker
+	 	})
+
+
+	 	async function getStations(){
+	 		const response = await fetch("api/user/get_users");
+	 		const data = await response.json();
+	 		return data;
+	 	}
+	 	
+	 </script>
+</body>
+</html>

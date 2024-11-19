@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>app-estacion - Panel</title>
+
+	<link rel="stylesheet" type="text/css" href="./views/static/css/styles.css">
+	 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+
+</head>
+<body>
+	<div id="wrapper">
+		<header class="header__panel">
+			<h2> Estaciónes </h2>
+			<a href="administrator" class="boton">Volver</a>
+		</header>
+		<main class="main__admin">
+			<div id="map" style="width: 100%; height: 100%;"></div>
+		</main>
+	 </div>
+	 
+	
+	<!-- Inicio del código javascript -->
+	<script type="text/javascript">
+
+		const map = L.map('map').setView([-27.4692131, -58.8306349], 2);
+
+		const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			maxZoom: 19
+		}).addTo(map);
+
+
+		/* Obtenemos el listado de datos */
+	    loadTracker().then( info => {
+
+	    	/* Recorremos la lista por fila */
+	    	info.list.forEach( fila => {
+
+	    		/* Recuperamos la información necesaria para colocar los marcadores */
+	    		let latitud = fila["latitud"];
+	    		let longitud = fila["longitud"];
+	    		let accesos = fila["cantidad_accesos"];
+
+	    		/* Genera un marcador con un popup dentro del mapa*/
+	    		const marker = L.marker([latitud, longitud]).addTo(map)
+				.bindPopup('IP: '+fila["ip"]+'<br>Accesos: '+accesos)
+				.openPopup();
+			})
+	    })
+
+		/**
+		 * 
+		 * Función asincrona para acceder al listado que tiene las latitudes
+		 * y longitudes a pintar como marcadores en el mapa
+		 * 
+		 * */
+		async function loadTracker(){
+			const response = await fetch("api/user/list_client_location");
+			const data = await response.json();
+
+			return data;
+		}
+
+	</script>
+
+</body>
+</html>
